@@ -25,4 +25,4 @@ class Shutdown_Controller:
       time.sleep(1)
       t -= 1
     # subprocess.Popen(['notify-send', 'SIMULATE SHUTDOWN'])
-    # os.system("shutdown -P now")
+    os.system("shutdown -P now")

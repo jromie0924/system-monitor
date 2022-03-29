@@ -12,9 +12,9 @@ class Network():
   def ping(self):
     hostname = '192.168.1.1'
     response = os.system(f'ping -c 1 {hostname}')
-    # if response == 0:
-    #   print('Network up')
-    #   return True
+    if response == 0:
+      print('Network up')
+      return True
     print ('Network down')
     return False
   
