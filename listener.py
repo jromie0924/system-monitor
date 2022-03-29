@@ -2,9 +2,6 @@ import sys
 import os
 from pika.adapters.blocking_connection import BlockingChannel, BlockingConnection
 from pika.spec import Basic, BasicProperties
-
-sys.path.append('../system-monitor')
-
 from config import Config
 from common import Common
 
