@@ -1,4 +1,3 @@
-import sys
 from pika.adapters.blocking_connection import BlockingChannel, BlockingConnection
 from config import Config
 from common import Common

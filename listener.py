@@ -1,9 +1,8 @@
-import sys
-import os
 from pika.adapters.blocking_connection import BlockingChannel, BlockingConnection
 from pika.spec import Basic, BasicProperties
 from config import Config
 from common import Common
+from shutdown import Shutdown_Controller
 
 
 class Listener:
@@ -12,6 +11,7 @@ class Listener:
 
   def __init__(self, url, queue, exchange, message_handler) -> None:
     common = Common()
+    self._config = Config()
     self._connection = common.open_connection(url)
     self._message_handler = message_handler
     self._exchange = exchange
@@ -36,8 +36,10 @@ def message_handler(ch: BlockingChannel, delivery_args: Basic.Deliver, propertie
   message = body.decode()
 
   # TODO: handle headers
-  print(message)
   ch.basic_ack(delivery_tag=delivery_args.delivery_tag, multiple=True)
+  if message == Config().SHUTDOWN_BODY:
+    controller = Shutdown_Controller()
+    controller.countdown(30)
 
 if __name__ == '__main__':
   config = Config()
