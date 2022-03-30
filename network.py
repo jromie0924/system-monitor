@@ -7,7 +7,14 @@ class Network():
   def __init__(self) -> None:
     config = Config()
     url = f'amqp://{config.mq_username}:{config.mq_password}@{config.mq_url}:{config.mq_port}'
-    self._publisher = Publisher(url, config.mq_emergency_exchange, config.mq_emergency_queue)
+    success = False
+    while not success:
+      try:
+        self._publisher = Publisher(url, config.mq_emergency_exchange, config.mq_emergency_queue)
+        success = True
+      except:
+        print("Cannot connect ot RabbitMQ server.")
+        time.sleep(5)
 
   def ping(self):
     hostname = '192.168.1.1'
@@ -19,7 +26,13 @@ class Network():
     return False
   
   def publish_command(self):
-    self._publisher.publish_message('SHUTDOWN')
+    retval = True
+    try:
+      self._publisher.publish_message('SHUTDOWN')
+    except:
+      print("Cannot connect to RabbitMQ server.")
+      retval = False
+    return retval
 
 if __name__ == '__main__':
   network = Network()
@@ -27,7 +40,10 @@ if __name__ == '__main__':
     while True:
       result = network.ping()
       if not result:
-        network.publish_command()
-      time.sleep(60)
+        result = network.publish_command()
+        if not result:
+          del network
+          network = Network()
+      time.sleep(10)
   except KeyboardInterrupt:
     exit(0)

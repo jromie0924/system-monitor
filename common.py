@@ -1,5 +1,6 @@
 import pika
 from pika.adapters.blocking_connection import BlockingChannel, BlockingConnection
+import time
 
 
 class Common():
@@ -7,4 +8,9 @@ class Common():
       pass
 
   def open_connection(self, url):
-    return pika.BlockingConnection(parameters=pika.URLParameters(url))
+    while True:
+      try:
+        return pika.BlockingConnection(parameters=pika.URLParameters(url))
+      except:
+        print("Cannot connect to RabbitMQ server.")
+        time.sleep(5)
