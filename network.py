@@ -44,6 +44,6 @@ if __name__ == '__main__':
         if not result:
           del network
           network = Network()
-      time.sleep(10)
+      time.sleep(60)
   except KeyboardInterrupt:
     exit(0)
